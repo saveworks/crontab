@@ -11,9 +11,11 @@ var (
 
 //configure
 type Config struct {
-	ApiPort         int `json:"ApiPorta"`
-	ApiReadTimeOut  int `json:"ApiReadTimeOut"`
-	ApiWriteTimeOut int `json:"ApiWriteTimeOut"`
+	ApiPort         int      `json:"ApiPorta"`
+	ApiReadTimeOut  int      `json:"ApiReadTimeOut"`
+	ApiWriteTimeOut int      `json:"ApiWriteTimeOut"`
+	EtcdEndpoints   []string `json:"EtcdEndpoints"`
+	EtcdDialTimeout int      `json:"EtcdDialTimeout"`
 }
 
 func InitConfig(fileName string) (err error) {

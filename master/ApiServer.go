@@ -41,8 +41,8 @@ func InitServer() (err error) {
 
 	//create http server
 	httpServer = &http.Server{
-		ReadTimeout:  time.Duration(G_conf.ApiReadTimeOut) * time.Millisecond,
-		WriteTimeout: time.Duration(G_conf.ApiWriteTimeOut) * time.Millisecond,
+		ReadTimeout:  time.Duration(G_conf.ApiReadTimeOut) * time.Microsecond,
+		WriteTimeout: time.Duration(G_conf.ApiWriteTimeOut) * time.Microsecond,
 		Handler:      mux,
 	}
 

@@ -1,10 +1,11 @@
 package main
 
 import (
-	"crontab/master"
 	"flag"
 	"fmt"
 	"runtime"
+
+	"github.com/saveworks/crontab/master"
 )
 
 var (
@@ -36,6 +37,11 @@ func main() {
 	if err = master.InitConfig(confFile); err != nil {
 		goto ERR
 
+	}
+
+	// 启动管理器
+	if err = master.InitJobMgr(); err != nil {
+		goto ERR
 	}
 
 	// 	start API http service
