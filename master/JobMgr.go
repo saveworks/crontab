@@ -1,7 +1,6 @@
 package master
 
 import (
-	"fmt"
 	"time"
 
 	v3 "go.etcd.io/etcd/client/v3"
@@ -44,8 +43,6 @@ func InitJobMgr() (err error) {
 		kv:     kv,
 		lease:  lease,
 	}
-
-	fmt.Println("conn etcd succ\n")
 
 	return
 }

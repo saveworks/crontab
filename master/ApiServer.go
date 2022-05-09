@@ -18,8 +18,17 @@ type ApiServer struct {
 }
 
 //save task interface
-func handleJobSave(w http.ResponseWriter, r *http.Request) {
+func handleJobSave(resp http.ResponseWriter, req *http.Request) {
+	var (
+		err error
+	)
 
+	// parse the post form
+	if err = req.ParseForm(); err != nil {
+		goto ERR
+	}
+
+ERR:
 }
 
 //init server
@@ -41,8 +50,8 @@ func InitServer() (err error) {
 
 	//create http server
 	httpServer = &http.Server{
-		ReadTimeout:  time.Duration(G_conf.ApiReadTimeOut) * time.Microsecond,
-		WriteTimeout: time.Duration(G_conf.ApiWriteTimeOut) * time.Microsecond,
+		ReadTimeout:  time.Duration(G_conf.ApiReadTimeOut) * time.Millisecond,
+		WriteTimeout: time.Duration(G_conf.ApiWriteTimeOut) * time.Millisecond,
 		Handler:      mux,
 	}
 
