@@ -11,11 +11,11 @@ var (
 
 //configure
 type Config struct {
-	ApiPort         int      `json:"ApiPorta"`
-	ApiReadTimeOut  int      `json:"ApiReadTimeOut"`
-	ApiWriteTimeOut int      `json:"ApiWriteTimeOut"`
-	EtcdEndpoints   []string `json:"EtcdEndpoints"`
-	EtcdDialTimeout int      `json:"EtcdDialTimeout"`
+	ApiPort         int      `json:"apiPort"`
+	ApiReadTimeOut  int      `json:"apiReadTimeOut"`
+	ApiWriteTimeOut int      `json:"apiWriteTimeOut"`
+	EtcdEndpoints   []string `json:"etcdEndpoints"`
+	EtcdDialTimeout int      `json:"etcdDialTimeout"`
 }
 
 func InitConfig(fileName string) (err error) {
@@ -24,11 +24,12 @@ func InitConfig(fileName string) (err error) {
 		content []byte
 		conf    Config
 	)
-	if content, err = ioutil.ReadFile(fileName); err != nil {
 
+	if content, err = ioutil.ReadFile(fileName); err != nil {
+		return
 	}
 	if err = json.Unmarshal(content, &conf); err != nil {
-
+		return
 	}
 	G_conf = &conf
 

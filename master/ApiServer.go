@@ -3,6 +3,7 @@ package master
 import (
 	"crontab/master/common"
 	"encoding/json"
+	"fmt"
 	"net"
 	"net/http"
 	"strconv"
@@ -48,7 +49,7 @@ func handleJobSave(resp http.ResponseWriter, req *http.Request) {
 	}
 
 	//resp
-	if bytes, err = common.BuildResponse(0, "succc", oldJob); err != nil {
+	if bytes, err = common.BuildResponse(0, "succc", oldJob); err == nil {
 		resp.Write(bytes)
 	}
 	return
@@ -74,6 +75,8 @@ func InitServer() (err error) {
 	if listener, err = net.Listen("tcp", ":"+strconv.Itoa(G_conf.ApiPort)); err != nil {
 		return
 	}
+
+	fmt.Printf("端口:%s", strconv.Itoa(G_conf.ApiPort))
 
 	//create http server
 	httpServer = &http.Server{
