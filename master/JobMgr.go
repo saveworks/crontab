@@ -78,3 +78,27 @@ func (JobMgr *JobMgr) SaveJob(job *common.Job) (oldJob *common.Job, err error) {
 	}
 	return
 }
+
+func (JobMgr *JobMgr) DeleteJob(name string) (oldJob *common.Job, err error) {
+	var (
+		jobKey    string
+		delResp   *v3.DeleteResponse
+		oldJobObj common.Job
+	)
+
+	// etcd 中保存任务的key
+	jobKey = "/cron/job" + name
+
+	//从etcd 中删除它
+	if delResp, err = JobMgr.kv.Delete(context.TODO(), jobKey, v3.WithPrevKV()); err != nil {
+		return
+	}
+	if len(delResp.PrevKvs) != 0 {
+		if err = json.Unmarshal(delResp.PrevKvs[0].Value, &oldJobObj); err != nil {
+			err = nil
+			return
+		}
+	}
+	oldJob = &oldJobObj
+	return
+}

@@ -5,14 +5,14 @@ import "encoding/json"
 type Job struct {
 	Name     string `json:"name"`
 	Command  string `json:"command"`
-	CronExpr string `json:"cron_expr"`
+	CronExpr string `json:"cronExpr"`
 }
 
 //http resp
 type Response struct {
 	Errno int         `json:"errno"`
 	Msg   string      `json:"msg"`
-	data  interface{} `json:"data"`
+	Data  interface{} `json:"data"`
 }
 
 func BuildResponse(errno int, msg string, data interface{}) (resp []byte, err error) {
@@ -22,7 +22,7 @@ func BuildResponse(errno int, msg string, data interface{}) (resp []byte, err er
 	)
 	response.Errno = errno
 	response.Msg = msg
-	response.data = data
+	response.Data = data
 
 	resp, err = json.Marshal(response)
 	return
