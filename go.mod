@@ -1,4 +1,4 @@
-module github.com/saveworks/crontab
+module crontab
 
 go 1.17
 

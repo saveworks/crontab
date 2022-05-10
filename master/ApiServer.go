@@ -1,6 +1,8 @@
 package master
 
 import (
+	"crontab/master/common"
+	"encoding/json"
 	"net"
 	"net/http"
 	"strconv"
@@ -20,7 +22,11 @@ type ApiServer struct {
 //save task interface
 func handleJobSave(resp http.ResponseWriter, req *http.Request) {
 	var (
-		err error
+		err     error
+		postJob string
+		job     common.Job
+		oldJob  *common.Job
+		bytes   []byte
 	)
 
 	// parse the post form
@@ -28,7 +34,28 @@ func handleJobSave(resp http.ResponseWriter, req *http.Request) {
 		goto ERR
 	}
 
+	// job
+	postJob = req.PostForm.Get("job")
+
+	//mash
+	if err = json.Unmarshal([]byte(postJob), &job); err != nil {
+		goto ERR
+	}
+
+	//save
+	if oldJob, err = G_jobMgr.SaveJob(&job); err != nil {
+		goto ERR
+	}
+
+	//resp
+	if bytes, err = common.BuildResponse(0, "succc", oldJob); err != nil {
+		resp.Write(bytes)
+	}
+	return
 ERR:
+	if bytes, err = common.BuildResponse(-1, err.Error(), nil); err != nil {
+		resp.Write(bytes)
+	}
 }
 
 //init server

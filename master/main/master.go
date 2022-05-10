@@ -1,11 +1,11 @@
 package main
 
 import (
+	"crontab/master"
 	"flag"
 	"fmt"
 	"runtime"
-
-	"github.com/saveworks/crontab/master"
+	"time"
 )
 
 var (
@@ -30,9 +30,9 @@ func main() {
 	//init args
 	initArgs()
 
-	//init thread
 	initEnv()
 
+	//init thread
 	//load configure
 	if err = master.InitConfig(confFile); err != nil {
 		goto ERR
@@ -47,6 +47,10 @@ func main() {
 	// 	start API http service
 	if err = master.InitServer(); err != nil {
 		goto ERR
+	}
+
+	for {
+		time.Sleep(1 * time.Second)
 	}
 
 	return
