@@ -109,6 +109,35 @@ ERR:
 	}
 }
 
+func handleJobKill(resp http.ResponseWriter, req *http.Request) {
+
+	var (
+		err   error
+		name  string
+		bytes []byte
+	)
+
+	// parse the post form
+	if err = req.ParseForm(); err != nil {
+		goto ERR
+	}
+
+	name = req.PostForm.Get("name")
+
+	if err = G_jobMgr.KillJobs(name); err != nil {
+		goto ERR
+	}
+
+	if bytes, err = common.BuildResponse(0, "succ", nil); err == nil {
+		resp.Write(bytes)
+	}
+	return
+ERR:
+	if bytes, err = common.BuildResponse(-1, err.Error(), nil); err == nil {
+		resp.Write(bytes)
+	}
+}
+
 //init server
 func InitServer() (err error) {
 	var (
@@ -122,6 +151,8 @@ func InitServer() (err error) {
 	mux.HandleFunc("/job/save", handleJobSave)
 	mux.HandleFunc("/job/delete", handleJobDelete)
 	mux.HandleFunc("/job/list", handleJobList)
+	mux.HandleFunc("/job/kill", handleJobKill)
+
 	//start tcp listen
 	if listener, err = net.Listen("tcp", ":"+strconv.Itoa(G_conf.ApiPort)); err != nil {
 		return
