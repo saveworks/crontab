@@ -3,7 +3,6 @@ package master
 import (
 	"crontab/master/common"
 	"encoding/json"
-	"fmt"
 	"net"
 	"net/http"
 	"strconv"
@@ -90,6 +89,26 @@ ERR:
 	}
 }
 
+func handleJobList(resp http.ResponseWriter, req *http.Request) {
+	var (
+		jobList []*common.Job
+		err     error
+		bytes   []byte
+	)
+	if jobList, err = G_jobMgr.ListJobs(); err != nil {
+		goto ERR
+	}
+	//resp
+	if bytes, err = common.BuildResponse(0, "succ", jobList); err == nil {
+		resp.Write(bytes)
+	}
+	return
+ERR:
+	if bytes, err = common.BuildResponse(-1, err.Error(), nil); err == nil {
+		resp.Write(bytes)
+	}
+}
+
 //init server
 func InitServer() (err error) {
 	var (
@@ -102,12 +121,13 @@ func InitServer() (err error) {
 	mux = http.NewServeMux()
 	mux.HandleFunc("/job/save", handleJobSave)
 	mux.HandleFunc("/job/delete", handleJobDelete)
+	mux.HandleFunc("/job/list", handleJobList)
 	//start tcp listen
 	if listener, err = net.Listen("tcp", ":"+strconv.Itoa(G_conf.ApiPort)); err != nil {
 		return
 	}
 
-	fmt.Printf("端口:%s", strconv.Itoa(G_conf.ApiPort))
+	//fmt.Printf("端口:%s", strconv.Itoa(G_conf.ApiPort))
 
 	//create http server
 	httpServer = &http.Server{
