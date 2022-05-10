@@ -144,6 +144,9 @@ func InitServer() (err error) {
 		mux        *http.ServeMux
 		listener   net.Listener
 		httpServer *http.Server
+		staticDir  http.Dir
+
+		staticHandler http.Handler
 	)
 
 	//configure route
@@ -152,6 +155,10 @@ func InitServer() (err error) {
 	mux.HandleFunc("/job/delete", handleJobDelete)
 	mux.HandleFunc("/job/list", handleJobList)
 	mux.HandleFunc("/job/kill", handleJobKill)
+
+	staticDir = http.Dir(G_conf.WebRoot)
+	staticHandler = http.FileServer(staticDir)
+	mux.Handle("/", http.StripPrefix("/", staticHandler))
 
 	//start tcp listen
 	if listener, err = net.Listen("tcp", ":"+strconv.Itoa(G_conf.ApiPort)); err != nil {

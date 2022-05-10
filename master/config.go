@@ -16,6 +16,7 @@ type Config struct {
 	ApiWriteTimeOut int      `json:"apiWriteTimeOut"`
 	EtcdEndpoints   []string `json:"etcdEndpoints"`
 	EtcdDialTimeout int      `json:"etcdDialTimeout"`
+	WebRoot         string   `json:"webRoot"`
 }
 
 func InitConfig(fileName string) (err error) {
